@@ -21,7 +21,7 @@ class User(db.Model, UserMixin):
     
 class Wine(db.Model):
     _id = db.Column(db.Integer, primary_key=True)
-    country = db.Column(db.String(20), unique=True, nullable=False)
+    country = db.Column(db.String(20), unique=False, nullable=False)
     winery = db.Column(db.String(40), nullable=False)
     title = db.Column(db.String(100), nullable=False)
     description = db.Column(db.String(500), nullable=False)
