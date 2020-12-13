@@ -28,7 +28,7 @@ class Wine(db.Model):
     points = db.Column(db.Integer, nullable=False)
     province = db.Column(db.String(50), nullable=True)
     variety = db.Column(db.String(100), nullable=True)
-    user_id = db.Column(db.Integer, db.ForeignKey('user._id'), nullable=False)
+    user_id = db.Column(db.Integer, db.ForeignKey('user._id'), nullable=True)
     user_favored = db.relationship('FavoriteWine', backref='favored_wine', lazy=True)
     user_comment = db.relationship('WineComment', backref='commented_on', lazy=True)
 
