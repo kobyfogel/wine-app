@@ -1,0 +1,33 @@
+{% extends "layout.j2" %}
+{% block content %}
+<div class="article-metadata">
+<h2>Welcome {{ current_user.username }}!</h2>
+Your Favorites wines:
+</div>
+    {% for wine, comments  in favorites.items() %}
+        <article class="media content-section">
+            <div class="media-body">
+                <div class="article-metadata">
+                    <div><span class="text-dark"> Winery:</span> {{ wine.winery }}</div>
+                    <div><span class="text-dark">Wine Name:</span><a href="{{ url_for('wine', wine_id=wine._id) }}"> {{ wine.title }}</a></div>
+                    <div><span class="text-dark">Source Country:</span> {{ wine.country }} </div>
+                    <div><span class="text-dark">Source Province:</span> {{ wine.province }} </div>
+                    <div><span class="text-dark">Wine Rating:</span> {{ wine.points }} </div>
+                    <div><span class="text-dark">Wine Variety:</span> {{ wine.variety }} </div>
+                    <div class="description"><div class="text-dark">Description:</div>{{ wine.description }} </div>
+                </div>
+            </div>
+        </article>
+        <div class="article-metadata">
+            <p>Wine Comments:</p>
+        </div>  
+        {% for comment in comments %}
+        <div class="media-body">
+            <div class="article-metadata">
+                <div><span class="text-dark"> Commented by: </span>{{ comment.commented_by.username }}</div>
+                <div> {{ comment.comment }}</div>
+            </div>
+        </div>
+        {% endfor %}
+    {% endfor %}
+{% endblock content %}

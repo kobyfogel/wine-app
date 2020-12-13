@@ -1,0 +1,26 @@
+{% extends "layout.j2" %}
+{% block content %}
+    <form method="POST" action="">
+        {{ form.hidden_tag() }}
+        <div class="form-group"></div>
+        <h3><b>Wine Search:</b></h3>
+        <h4> fill up at least one field</h4>       
+        {{ form.title.label }}
+        {{ form.title(class="form-control", placeholder="Specific wine name") }}
+        <br>
+        {{ form.winery.label }}
+        {{ form.winery(class="form-control", placeholder="Winery Name") }}
+        <br>
+        {{ form.country.label }}
+        {{ form.country(class="form-control", placeholder="Country Name") }}
+        <br>
+        {{ form.variety.label }}
+        {{ form.variety(class="form-control", placeholder="Wine classification") }}
+        <br>
+        {{ form.points.label }}
+        {{ form.points(class="form-control", placeholder="Wine rating 1-100") }}
+        <br>
+        {{ form.submit(class="btn btn-danger mb-3") }}
+    </form>
+{% endblock content %}
+

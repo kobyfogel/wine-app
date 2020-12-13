@@ -1,0 +1,26 @@
+{% extends "layout.j2" %}
+{% block content %}
+    {% if results %}
+        {% for result in results %}
+            <article class="media content-section">
+                <div class="media-body">
+                    <div class="article-metadata">
+                        <div><span class="text-dark"> Winery:</span> {{ result.winery }}</div>
+                        <div><span class="text-dark">Wine Name:</span><a href="{{ url_for('wine', wine_id=result._id) }}"> {{ result.title }}</a></div>
+                        <div><span class="text-dark">Source Country:</span> {{ result.country }} </div>
+                        <div><span class="text-dark">Source Province:</span> {{ result.province }} </div>
+                        <div><span class="text-dark">Wine Rating:</span> {{ result.points }} </div>
+                        <div><span class="text-dark">Wine Variety:</span> {{ result.variety }} </div>
+                        <div class="description"><div class="text-dark">Description:</div>{{ result.description }} </div>
+                    </div>
+                </div>
+            </article>
+        {% endfor %}
+    {% else %}
+    <article class="media content-section">
+        <div class="media-body">
+            <div class="article-metadata">
+                <div>No Results. Please check your search details</div>
+                <div><a href="{{ url_for('home') }}">Return</a> to Search</div>
+    {% endif %}
+{% endblock content %}

@@ -1,0 +1,134 @@
+{% extends "layout.j2" %}
+{% block content %}
+  <article class="media content-section">
+    <div class="media-body">
+        <div class="article-metadata">
+            {% if wine.added_by == current_user %}
+            <div>
+                <a class="btn btn-secondary btn-sm mt-1 mb-1" href="{{ url_for('edit_wine', wine_id=wine._id) }}">Update</a>
+                <button type="button" class="btn btn-danger btn-sm m-1" data-toggle="modal" data-target="#deleteModal">Delete</button>
+            </div>
+            {% endif %}
+            <div><span class="text-dark"> Winery:</span> {{ wine.winery }}</div>
+            <div><span class="text-dark">Wine Name:</span> {{ wine.title }}</div>
+            <div><span class="text-dark">Source Country:</span> {{ wine.country }} </div>
+            <div><span class="text-dark">Source Province:</span> {{ wine.province }} </div>
+            <div><span class="text-dark">Wine Rating:</span> {{ wine.points }} </div>
+            <div><span class="text-dark">Wine Variety:</span> {{ wine.variety }} </div>
+            <div class="description"><div class="text-dark">Description:</div>{{ wine.description }} </div>
+            
+            {% if current_user.is_authenticated %}
+              {% if is_favored %}
+              <form action="" method="POST">
+                {{ favorite_form.hidden_tag() }}
+                {{ favorite_form.clicked(value='Remove from favorites', class="btn btn-danger btn-sm mt-3 mb-3") }}
+              </form>
+              {% else %}
+              <form action="" method="POST">
+                {{ favorite_form.hidden_tag() }}
+                {{ favorite_form.clicked(value='Add to favorites', class="btn btn-danger btn-sm mt-3 mb-3") }}
+              </form>
+              {% endif %}
+            {% endif%}
+            {% for comment in comments %}
+              <article class="media content-section">
+                <div class="article-metadata">
+                    <div>Written by <span class="text-dark">{{comment.commented_by.username}}</span>
+                    
+                
+                {% if not comment.commented_by == current_user %}
+                  <div class="text-dark">{{ comment.comment }}</div>
+                {% else %}
+                  <input type="text" id="comment" class="form-control form-control-lg" placeholder="{{ comment.comment }}">
+                  <button type="button" class="btn btn-danger btn-sm m-1" data-toggle="modal" data-target="#deleteCommentModal{{comment._id}}">Delete</button>
+                  <button type="button" class="btn btn-danger btn-sm m-1" onclick="update_comment({{comment._id}});">Edit message</button>
+
+                </div>
+                {% endif %}
+              </article>
+              <!-- Modal -->
+              <div class="modal fade" id="deleteCommentModal{{comment._id}}" tabindex="-1" role="dialog" aria-labelledby="deleteCommentModalLabel" aria-hidden="true">
+                <div class="modal-dialog" role="document">
+                  <div class="modal-content">
+                    <div class="modal-header">
+                      <h5 class="modal-title" id="deleteCommentModalLabel">Delete Comment?</h5>
+                      <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+                        <span aria-hidden="true">&times;</span>
+                      </button>
+
+                    </div>
+                    <div class="modal-footer">
+                      <button type="button" class="btn btn-secondary" data-dismiss="modal">Close</button>
+                      <form action="{{ url_for('delete_comment', comment_id=comment._id) }}" method="POST">
+                        <input class="btn btn-danger" type="submit" value="Delete">
+                      </form>
+                    </div>
+                  </div>
+                </div>
+              </div>
+            {% endfor %}
+            {% if current_user.is_authenticated %}
+              <form method="POST" action="{{url_for('wine', wine_id=wine._id)}}">
+                {{ form.hidden_tag() }}
+                <div class="form-group">
+                  {{ form.content.label(class="form-control-label") }}
+                  {% if form.content.errors %}
+                      {{ form.content(class="form-control form-control-lg is-invalid") }}
+                      <div class="invalid-fidback">
+                          {% for error in form.content.errors %}
+                          <span>{{ error }}</span>
+                          {% endfor %}
+                      </div>
+                  {% else %}
+                  {{ form.content(class="form-control form-control-lg") }}
+                  {% endif %}
+                  {{ form.submit(class="btn btn-danger mt-3") }}
+                </div>
+              </form>
+            {% else %}
+            <p class="text-dark">Please <a href="{{ url_for('login') }}">Log In</a> to comment or to add wine to favorites </p>
+            {% endif %}
+        </div>
+    </div>
+  </article>
+  <!-- Modal -->
+  <div class="modal fade" id="deleteModal" tabindex="-1" role="dialog" aria-labelledby="deleteModalLabel" aria-hidden="true">
+    <div class="modal-dialog" role="document">
+      <div class="modal-content">
+        <div class="modal-header">
+          <h5 class="modal-title" id="deleteModalLabel">Delete Wine?</h5>
+          <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+            <span aria-hidden="true">&times;</span>
+          </button>
+        </div>
+        <div class="modal-footer">
+          <button type="button" class="btn btn-secondary" data-dismiss="modal">Close</button>
+          <form action="{{ url_for('delete_wine', wine_id=wine._id) }}" method="POST">
+            <input class="btn btn-danger" type="submit" value="Delete">
+          </form>
+        </div>
+      </div>
+    </div>
+  </div>
+{% endblock content %}
+{% block script %}
+<script>
+  function update_comment(comment_id) {
+    var comment_content = document.getElementById("comment");
+    var entry = {
+    comment_content: comment_content.value,
+    comment_id: comment_id
+    };
+
+    fetch(`${window.origin}/edit-comment`,{
+    method: "POST",
+    credentials: "include",
+    body: JSON.stringify(entry),
+    cache: "no-cache",
+    headers: new Headers({
+      "content-type": "application/json"
+    })
+    })
+  }
+</script>
+{% endblock %}
