@@ -1,5 +1,6 @@
 from wine import db
 
+
 db.session.execute("""
 INSERT INTO wine (country,description,points,province,title,variety,winery,user_id) VALUES
 	 ('Italy','Aromas include tropical fruit, broom, brimstone and dried herb. The palate isn''t overly expressive, offering unripened apple, citrus and dried sage alongside brisk acidity.',87,'Sicily & Sardinia','Nicosia 2013 Vulkà Bianco  (Etna)','White Blend','Nicosia',NULL),
