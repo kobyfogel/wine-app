@@ -1,4 +1,5 @@
 from flask_login import UserMixin
+from sqlalchemy.orm import validates
 from wine import db, login_manager
 
 
@@ -17,11 +18,12 @@ class User(db.Model, UserMixin):
     wine_comment = db.relationship('WineComment', backref='commented_by', lazy=True)
 
     def get_id(self):
-           return (self._id)
-    
+        return (self._id)
+
+
 class Wine(db.Model):
     _id = db.Column(db.Integer, primary_key=True)
-    country = db.Column(db.String(20), unique=False, nullable=False)
+    country = db.Column(db.String(20), nullable=False)
     winery = db.Column(db.String(40), nullable=False)
     title = db.Column(db.String(100), nullable=False)
     description = db.Column(db.String(500), nullable=False)
@@ -32,6 +34,12 @@ class Wine(db.Model):
     user_favored = db.relationship('FavoriteWine', backref='favored_wine', lazy=True)
     user_comment = db.relationship('WineComment', backref='commented_on', lazy=True)
 
+    @validates('user_id')
+    def empty_string_to_null(self, key, value):
+        if isinstance(value,str) and value == '':
+            return None
+        else:
+            return value
 
 class FavoriteWine(db.Model):
     _id = db.Column(db.Integer, primary_key=True)

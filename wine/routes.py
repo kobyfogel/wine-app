@@ -74,7 +74,6 @@ def logout():
 
 
 @app.route('/reset', methods=['GET', 'POST'])
-@login_required
 def reset():
     form = ResetPasswordForm()
     if form.validate_on_submit():
@@ -127,6 +126,7 @@ def wine(wine_id):
     return render_template('wine.j2', wine=wine,
         form=form, title=wine.title, comments=wine_comments, 
         is_favored=is_favored, favorite_form=favorite_form)
+
 
 @app.route('/edit-comment', methods=['POST'])
 def edit_comment():
