@@ -1,14 +1,18 @@
-import csv
+import json
 
 from wine import db
+from wine.models import Wine
+from sqlalchemy.exc import IntegrityError
+
+with open('data.json', encoding="utf-8") as json_file: 
+    data = json.load(json_file) 
 
 
-with open('7000.csv', encoding="utf-8") as f:
-    data=[tuple(line) for line in csv.reader(f)]
-
-
-query = "INSERT INTO wine (country, description, points, province, title, variety, winery, user_id) VALUES"
-for line in data[1:]:
-    new_line = (line[1:-1]) + ("NULL",)
-    db.session.execute(f"{query} {new_line};")
-db.session.commit()
+data = data['7000'] 
+for line in data:
+    new_wine = Wine(**line)
+    try:
+        db.session.add(new_wine)
+        db.session.commit()
+    except IntegrityError:
+        db.session.rollback()
