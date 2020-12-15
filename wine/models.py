@@ -23,13 +23,13 @@ class User(db.Model, UserMixin):
 
 class Wine(db.Model):
     _id = db.Column(db.Integer, primary_key=True)
-    country = db.Column(db.String(20), nullable=False)
-    winery = db.Column(db.String(40), nullable=False)
+    country = db.Column(db.String(40), nullable=False)
+    winery = db.Column(db.String(100), nullable=False)
     title = db.Column(db.String(200), nullable=False)
     description = db.Column(db.String(1000), nullable=False)
     points = db.Column(db.Integer, nullable=False)
-    province = db.Column(db.String(50), nullable=True)
-    variety = db.Column(db.String(100), nullable=True)
+    province = db.Column(db.String(100), nullable=True)
+    variety = db.Column(db.String(200), nullable=True)
     user_id = db.Column(db.Integer, db.ForeignKey('user._id'), nullable=True)
     user_favored = db.relationship('FavoriteWine', backref='favored_wine', lazy=True)
     user_comment = db.relationship('WineComment', backref='commented_on', lazy=True)
