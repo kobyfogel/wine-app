@@ -20,7 +20,7 @@ def home():
         form = {key: value.capitalize() for key, value 
             in form.data.items() if value != "" and key != "title"}
         results = Wine.query.filter_by(**form).all()
-        title_results = title_results = Wine.query.filter(and_(Wine.title.contains(word) for word in title)).all()  
+        title_results = title_results = Wine.query.filter(and_(Wine.title.contains(word.capitalize()) for word in title)).all()  
         final_results = []
         for result in results:
             for title in title_results:
