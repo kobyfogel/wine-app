@@ -26,7 +26,7 @@ class Wine(db.Model):
     country = db.Column(db.String(20), nullable=False)
     winery = db.Column(db.String(40), nullable=False)
     title = db.Column(db.String(200), nullable=False)
-    description = db.Column(db.String(500), nullable=False)
+    description = db.Column(db.String(1000), nullable=False)
     points = db.Column(db.Integer, nullable=False)
     province = db.Column(db.String(50), nullable=True)
     variety = db.Column(db.String(100), nullable=True)
