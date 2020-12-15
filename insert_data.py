@@ -8,7 +8,7 @@ with open('wine.json', encoding="utf-8") as json_file:
     data = json.load(json_file) 
 
 
-data = data['7000'] 
+data = data['wine'] 
 for line in data:
     new_wine = Wine(**line)
     try:
