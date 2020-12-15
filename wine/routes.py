@@ -1,5 +1,6 @@
 from flask import abort, flash, jsonify, make_response, redirect, render_template, request, url_for
 from flask_login import current_user, login_required, login_user, logout_user
+from sqlalchemy import and_
 from wine import app, bcrypt, db
 from wine.forms import (CommentForm, FavoriteForm, LoginForm, 
     RegistrationForm, ResetPasswordForm, SearchFrom, WineForm)
@@ -12,10 +13,20 @@ def home():
     form = SearchFrom()
     if form.validate_on_submit():
         del form['submit']
+        # form = {key: value.capitalize() for key, value 
+        #     in form.data.items() if value != ""}
+        # results = Wine.query.filter_by(**form).all()
+        title = form.title.data.split(" ")
         form = {key: value.capitalize() for key, value 
-            in form.data.items() if value != ""}
+            in form.data.items() if value != "" and key != "title"}
         results = Wine.query.filter_by(**form).all()
-        return render_template('results.j2', results=results, 
+        title_results = title_results = Wine.query.filter(and_(Wine.title.contains(word) for word in title)).all()  
+        final_results = []
+        for result in results:
+            for title in title_results:
+                if result._id == title._id:
+                    final_results.append(result)
+        return render_template('results.j2', results=final_results, 
             title='Search Results')
     return render_template('home.j2', form=form, title='home')
 
