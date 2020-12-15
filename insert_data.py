@@ -4,7 +4,7 @@ from wine import db
 from wine.models import Wine
 from sqlalchemy.exc import IntegrityError
 
-with open('data.json', encoding="utf-8") as json_file: 
+with open('wine.json', encoding="utf-8") as json_file: 
     data = json.load(json_file) 
 
 
