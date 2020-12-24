@@ -1,5 +1,5 @@
 from flask_wtf import FlaskForm
-from wine.models import User
+from wine.wine.models import User
 from wtforms import IntegerField, PasswordField, StringField, SubmitField, TextAreaField
 from wtforms.validators import DataRequired, Email, EqualTo, Length, NumberRange, ValidationError
 

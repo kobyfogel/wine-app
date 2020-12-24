@@ -1,10 +1,10 @@
 from flask import abort, flash, jsonify, make_response, redirect, render_template, request, url_for
 from flask_login import current_user, login_required, login_user, logout_user
 from sqlalchemy import and_
-from wine import app, bcrypt, db
-from wine.forms import (CommentForm, FavoriteForm, LoginForm, 
+from wine.wine import app, bcrypt, db
+from wine.wine.forms import (CommentForm, FavoriteForm, LoginForm, 
     RegistrationForm, ResetPasswordForm, SearchFrom, WineForm)
-from wine.models import FavoriteWine, User, Wine, WineComment
+from wine.wine.models import FavoriteWine, User, Wine, WineComment
 
 
 @app.route('/', methods=['GET', 'POST'])
@@ -31,18 +31,21 @@ def home():
     return render_template('home.j2', form=form, title='home')
 
 
+def register(username: str, password: str, email: str):
+    hashed_password = bcrypt.generate_password_hash(password).decode('utf-8')
+    user = User(username=username, password=hashed_password, email=email)
+    db.session.add(user)
+    db.session.commit()
+    return user
+
+
 @app.route('/register', methods=['GET', 'POST'])
-def register():
+def register_page():
     if current_user.is_authenticated:
         return redirect(url_for('home'))
     form = RegistrationForm()
     if form.validate_on_submit():
-        hashed_password = bcrypt.generate_password_hash(
-            form.password.data).decode('utf-8')
-        user = User(username=form.username.data, 
-            password=hashed_password, email=form.email.data)
-        db.session.add(user)
-        db.session.commit()
+        register(form.username.data, form.password.data, form.email.data)
         flash(f'Account was created for {form.username.data}!', 'seccess')
         return redirect(url_for('login'))
     return render_template('register.j2', form=form, title='Register')
@@ -53,7 +56,9 @@ def login():
     if current_user.is_authenticated:
         return redirect(url_for('home'))
     form = LoginForm()
-    if form.validate_on_submit():
+    if not form.username.data or not form.password.data:
+        flash('Some fields are missing')
+    elif form.validate_on_submit():
         user = User.query.filter_by(username=form.username.data).first()
         if user and bcrypt.check_password_hash(user.password, form.password.data):
             login_user(user)

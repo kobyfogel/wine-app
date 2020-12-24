@@ -1,6 +1,6 @@
 from flask_login import UserMixin
 from sqlalchemy.orm import validates
-from wine import db, login_manager
+from wine.wine import db, login_manager
 
 
 @login_manager.user_loader
@@ -36,7 +36,7 @@ class Wine(db.Model):
 
     @validates('user_id')
     def empty_string_to_null(self, key, value):
-        if isinstance(value,str) and value == '':
+        if isinstance(value, str) and value:
             return None
         else:
             return value
