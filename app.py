@@ -1,4 +1,4 @@
-from wine import app
+from wine.wine import app
 
 if __name__ == "__main__":
     app.run()
