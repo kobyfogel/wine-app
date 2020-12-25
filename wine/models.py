@@ -1,6 +1,6 @@
 from flask_login import UserMixin
 from sqlalchemy.orm import validates
-from wine.wine import db, login_manager
+from wine import db, login_manager
 
 
 @login_manager.user_loader

@@ -1,10 +1,10 @@
 from flask import abort, flash, jsonify, make_response, redirect, render_template, request, url_for
 from flask_login import current_user, login_required, login_user, logout_user
 from sqlalchemy import and_
-from wine.wine import app, bcrypt, db
-from wine.wine.forms import (CommentForm, FavoriteForm, LoginForm, 
+from wine import app, bcrypt, db
+from wine.forms import (CommentForm, FavoriteForm, LoginForm, 
     RegistrationForm, ResetPasswordForm, SearchFrom, WineForm)
-from wine.wine.models import FavoriteWine, User, Wine, WineComment
+from wine.models import FavoriteWine, User, Wine, WineComment
 
 
 @app.route('/', methods=['GET', 'POST'])
@@ -13,9 +13,6 @@ def home():
     form = SearchFrom()
     if form.validate_on_submit():
         del form['submit']
-        # form = {key: value.capitalize() for key, value 
-        #     in form.data.items() if value != ""}
-        # results = Wine.query.filter_by(**form).all()
         title = form.title.data.split(" ")
         form = {key: value.capitalize() for key, value 
             in form.data.items() if value != "" and key != "title"}

@@ -3,8 +3,8 @@ import tempfile
 
 import pytest
 
-from wine.wine import db, routes
-from wine.app import app
+from wine import db, routes
+from wine import app
 
 
 @pytest.fixture
